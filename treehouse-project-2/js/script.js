@@ -80,12 +80,12 @@ function addPagination(list) {
       // Add the button to the li
       li.append(button)
       // Insert the li to the ul
-      linkListUl.insertAdjacentHTML("beforeend", li);
+      linkListUl.append(li);
    }
    
    // Check is their is a child in the ul, if there is add the active class to the first element.
-   if (linkListUl.firstChild) {
-      linkListUl.firstChild.firstChild.className = "active";
+   if (linkListUl.firstElementChild) {
+      linkListUl.firstElementChild.firstElementChild.className = "active";
    }
 
    // add click listener to the ul
@@ -94,16 +94,26 @@ function addPagination(list) {
       let btn = event.target;
       // taking the textContent of the btn and parsing as an integer
       let pageNumber = parseInt(btn.textContent)
-      // if there are buttons, set class name to nothing
-      if (btn.tagName === "BUTTON") {
-         btn.className = ""
-      } 
-      // the btn is selected, set class name to active.
-      if (btn) {
-         btn.className = "active"
-      }
+      
 
-      showPage(data, pageNumber);
+      // check if the current selected button is a button
+      if (btn.targetName === "BUTTON") {
+         
+         
+         // loop through the li elements
+         for (var i = 0; i < linkListUl.children.length; i++) {
+            // check if page number is same as current index + 1, if it is set current target class name to active
+            if (pageNumber === (i + 1)) {
+               btn.className = "active"
+            } else {
+               // If the check fails set the class name of all buttons to nothing.
+               linkListUl.children[i].firstElementChild.className = ""
+            }
+         }
+      }
+      
+      showPage(list, pageNumber);
+      
    })
 
    
