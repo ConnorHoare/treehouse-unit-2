@@ -50,7 +50,33 @@ function showPage(list, page) {
   
       }
    }
+   addSearchBar();
    return studentListUL;
+}
+
+function filterStudent() {
+
+   // get the search bar and store in varliable
+   let searchInput = document.getElementById("search");
+
+   // add event listener to the input 
+   searchInput.addEventListener("input", (event) => {
+      // create variables to store the text input and make it lower case
+      let textInput = event.target.value;
+      let lowercase = textInput.toLowerCase();
+      // create empty array to push the filtered search students into
+      let filteredStudentArray = [];
+
+      // loop through all objects to check if the search input is contained in the current object
+      for (var i = 0; i < data.length; i++) {
+         if (data[i].name.first.includes(lowercase) || data[i].name.last.includes(lowercase)) {
+            // push the current student which has the same characters to the filtered array
+            filteredStudentArray.push(data[i])
+            // call the showPage function on the filtered array rather than the original data array
+            showPage(filteredStudentArray, 1)
+         }
+      }
+   })
 }
 
 
@@ -97,7 +123,7 @@ function addPagination(list) {
       
 
       // check if the current selected button is a button
-      if (btn.targetName === "BUTTON") {
+      if (btn.tagName === "BUTTON") {
          
          
          // loop through the li elements
@@ -110,19 +136,49 @@ function addPagination(list) {
                linkListUl.children[i].firstElementChild.className = ""
             }
          }
-      }
-      
-      showPage(list, pageNumber);
-      
+
+         showPage(list, pageNumber);
+         
+      } 
    })
 
-   
+}
+
+function addSearchBar() {
+
+   const header = document.querySelector(".header");
+
+   const searchBar = document.createElement("label");
+   searchBar.className = "student-search";
    
 
+   const searchSpan = document.createElement("span");
+   searchSpan.innerHTML = "Search for student";
+
+   const searchInput = document.createElement("input");
+   searchInput.id = "search";
+   searchInput.placeholder = "Search by name...";
+
+   const searchButton = document.createElement("button");
+   searchButton.type = "button";
+
+   const searchImage = document.createElement("img");
+   searchImage.src = "img/icn-search.svg"
+   searchImage.alt = "Search Image";
+
+   searchBar.append(searchSpan);
+   searchBar.append(searchInput);
+   searchBar.append(searchButton);
+   searchButton.append(searchImage);
+   header.append(searchBar);
+
+   return header
+   
 }
 
 
 
 // Call functions
 showPage(data, 1);
-addPagination(data)
+addPagination(data);
+filterStudent();
