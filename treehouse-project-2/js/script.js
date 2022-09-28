@@ -19,35 +19,35 @@ This function will create and insert/append the elements needed to display a "pa
 */
 
 function showPage(list, page) {
-   // start index starts from the page number * 9 then - 9 
-   // e.g if on page 2 -> 2 * 9 = 18 - 9 = 9 
-   // Meaning the index will start on 9 
+   // start index starts from the page number * 9 then - 9
+   // e.g if on page 2 -> 2 * 9 = 18 - 9 = 9
+   // Meaning the index will start on 9
    // end index will then be 9 higher than this number as there is 9 students on the page.
    let startIndex = (page * 9) - 9;
    let endIndex = page * 9;
 
-   // get the list 
+   // get the list
    const studentListUL = document.querySelector(".student-list");
    // reset the inner html incase anything is stored here.
    studentListUL.innerHTML = "";
 
    for (var i = 0; i < list.length; i++) {
       if (i >= startIndex && i < endIndex) {
-         // Create the elements to display   
-         let student = `<li class='student-item cf'> 
+         // Create the elements to display
+         let student = `<li class='student-item cf'>
                            <div class='student-details'>
-                              <img class='avatar' src='${data[i].picture.thumbnail}' alt='Profile Picture'>
-                              <h3>${data[i].name.first} ${data[i].name.last}</h3>
-                              <span class="email">${data[i].email}</span>
+                              <img class='avatar' src='${list[i].picture.thumbnail}' alt='Profile Picture'>
+                              <h3>${list[i].name.first} ${list[i].name.last}</h3>
+                              <span class="email">${list[i].email}</span>
                            </div>
                            <div class="joined-details">
-                              <span class="date">Joined ${data[i].registered.date}</span>
+                              <span class="date">Joined ${list[i].registered.date}</span>
                            </div>
                          </li>`
 
          // Insert the student into the studentList
          studentListUL.insertAdjacentHTML("beforeend", student)
-  
+
       }
    }
    return studentListUL;
@@ -56,7 +56,7 @@ function showPage(list, page) {
 addSearchBar();
 
 function filterStudent() {
-   
+
       // create variables to store the text input and make it lower case
       let textInput = searchInput.value;
       let lowercase = textInput.toLowerCase();
@@ -68,10 +68,11 @@ function filterStudent() {
          let fullName = data[i].name.first.toLowerCase() + " " + data[i].name.last.toLowerCase();
          if (fullName.includes(textInput)) {
             // push the current student which has the same characters to the filtered array
-            filteredStudentArray.push(data[i])
+            filteredStudentArray.push(data[i]);
+
       }
-   }  
-   return filteredStudentArray
+   }
+     return filteredStudentArray
 }
 
 // get the search bar and store in varliable
@@ -80,9 +81,9 @@ let searchInput = document.getElementById("search");
 searchInput.addEventListener("input", () => {
    showPage(filterStudent(), 1)
    addPagination(filterStudent())
-})
 
 
+});
 
 /*
 Create the `addPagination` function
@@ -96,7 +97,7 @@ function addPagination(list) {
    const linkListUl = document.querySelector(".link-list");
    linkListUl.innerHTML = "";
 
-   // looping through amount of pages 
+   // looping through amount of pages
    for (var i = 0; i < numberOfPages; i++) {
       // Creating the list and buttons
       let li = document.createElement("li");
@@ -110,10 +111,14 @@ function addPagination(list) {
       // Insert the li to the ul
       linkListUl.append(li);
    }
-   
+
    // Check is their is a child in the ul, if there is add the active class to the first element.
    if (linkListUl.firstElementChild) {
       linkListUl.firstElementChild.firstElementChild.className = "active";
+   }
+
+   if (numberOfPages === 0) {
+     addNoResults()
    }
 
    // add click listener to the ul
@@ -122,12 +127,10 @@ function addPagination(list) {
       let btn = event.target;
       // taking the textContent of the btn and parsing as an integer
       let pageNumber = parseInt(btn.textContent)
-      
 
       // check if the current selected button is a button
       if (btn.tagName === "BUTTON") {
-         
-         
+
          // loop through the li elements
          for (var i = 0; i < linkListUl.children.length; i++) {
             // check if page number is same as current index + 1, if it is set current target class name to active
@@ -135,15 +138,13 @@ function addPagination(list) {
                btn.className = "active"
             } else {
                // If the check fails set the class name of all buttons to nothing.
-               linkListUl.children[i].firstElementChild.className = ""
+               linkListUl.children[i].firstElementChild.className = "";
             }
          }
 
          showPage(list, pageNumber);
-         
-      } 
-   })
-
+      }
+   });
 }
 
 function addSearchBar() {
@@ -152,7 +153,7 @@ function addSearchBar() {
 
    const searchBar = document.createElement("label");
    searchBar.className = "student-search";
-   
+
 
    const searchSpan = document.createElement("span");
    searchSpan.innerHTML = "Search for student";
@@ -175,7 +176,16 @@ function addSearchBar() {
    header.append(searchBar);
 
    return header
-   
+
+}
+
+function addNoResults() {
+
+  let page = document.querySelector(".page");
+  let noResults = ``;
+  noResults = `<h2 class="no-results">No Results Found</h2>`;
+  page.insertAdjacentHTML("beforeend", noResults);
+
 }
 
 
@@ -183,4 +193,3 @@ function addSearchBar() {
 // Call functions
 showPage(data, 1);
 addPagination(data);
-
