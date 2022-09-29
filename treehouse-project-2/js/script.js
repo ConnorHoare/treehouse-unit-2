@@ -18,6 +18,9 @@ Create the `showPage` function
 This function will create and insert/append the elements needed to display a "page" of nine students
 */
 
+// get the list
+const studentListUL = document.querySelector(".student-list");
+
 function showPage(list, page) {
    // start index starts from the page number * 9 then - 9
    // e.g if on page 2 -> 2 * 9 = 18 - 9 = 9
@@ -26,8 +29,7 @@ function showPage(list, page) {
    let startIndex = (page * 9) - 9;
    let endIndex = page * 9;
 
-   // get the list
-   const studentListUL = document.querySelector(".student-list");
+
    // reset the inner html incase anything is stored here.
    studentListUL.innerHTML = "";
 
@@ -72,17 +74,20 @@ function filterStudent() {
 
       }
    }
-     return filteredStudentArray
+   showPage(filteredStudentArray, 1);
+   addPagination(filteredStudentArray)
+    
+
+    if (filteredStudentArray.length === 0) {
+      studentListUL.innerHTML = "<li class='no-results'>No Results Found</li>"
+    }
 }
 
 // get the search bar and store in varliable
 let searchInput = document.getElementById("search");
 
 searchInput.addEventListener("input", () => {
-   showPage(filterStudent(), 1)
-   addPagination(filterStudent())
-
-
+   filterStudent()
 });
 
 /*
@@ -117,9 +122,6 @@ function addPagination(list) {
       linkListUl.firstElementChild.firstElementChild.className = "active";
    }
 
-   if (numberOfPages === 0) {
-     addNoResults()
-   }
 
    // add click listener to the ul
    linkListUl.addEventListener("click", (event) => {
@@ -179,14 +181,7 @@ function addSearchBar() {
 
 }
 
-function addNoResults() {
 
-  let page = document.querySelector(".page");
-  let noResults = ``;
-  noResults = `<h2 class="no-results">No Results Found</h2>`;
-  page.insertAdjacentHTML("beforeend", noResults);
-
-}
 
 
 
